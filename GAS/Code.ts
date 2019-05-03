@@ -12,30 +12,32 @@ const CONF: Conf = {
   numPosts: 100,
   // words to search for (case insensitive)
   keywords: [
-    "python",
-    "javascript",
-    "html",
-    "css",
-    "programming",
-    "programmer",
-    "scripting",
-    "automate",
-    "automation",
-    "scraping",
-    "scraper",
-    "data",
     "analysis",
     "analytics",
-    "science",
-    "visualization",
-    "statistics",
-    "files",
-    "txt",
+    "app",
+    "automate",
+    "automation",
+    "css",
     "csv",
-    "spreadsheet",
     "data",
+    "data",
+    "files",
+    "html",
+    "javascript",
+    "programmer",
+    "programming",
+    "python",
+    "science",
+    "scraper",
+    "scraping",
+    "scripting",
+    "spreadsheet",
+    "statistics",
+    "tutor",
+    "txt",
+    "visualization",
     "website",
-    "tutor"
+    "xml"
   ],
   // email setings
   email: {
@@ -147,7 +149,8 @@ function filterAnnotatedPosts(posts: AnnotatedPost[]) {
 
 /**
  * Log data to Google Sheet for further analysis / review
- * @param data
+ * @param data - list of annotated posts
+ * @param test - if true write to test sheet, else main sheet
  */
 function logToSheet(data: AnnotatedPost[], test: boolean) {
   let i = test ? 1 : 0;
