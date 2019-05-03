@@ -107,7 +107,7 @@ function parseContent(xml: string): Post[] {
       title: info["title"],
       link: info["link"],
       description: info["description"],
-      date: new Date(info["date"]).toLocaleString()
+      date: new Date(info["date"])
     });
   }
   return allPosts;
