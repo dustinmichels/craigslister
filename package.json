@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Google Apps Script to help find craigslist gigs related to scriping & automation",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "lodash": "^4.17.11"
+  },
   "devDependencies": {
     "@types/google-apps-script": "0.0.45"
   },

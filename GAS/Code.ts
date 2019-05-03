@@ -1,5 +1,5 @@
 /// <reference path="./Code.d.ts" />
-
+import { sortBy } from "lodash";
 // ------------------------------
 // Configuration
 // ------------------------------
@@ -117,13 +117,14 @@ function parseContent(xml: string): Post[] {
       info[child.getName()] = child.getText();
     });
     // construct "post" object, add to list
-    allPosts.push(<Post>{
+    let post = <Post>{
       title: info["title"],
       link: info["link"],
       description: info["description"],
       listedDate: new Date(info["date"]),
       scrapedDate: new Date()
-    });
+    };
+    post["hash"] = hashPost(post);
   }
   return allPosts;
 }
@@ -205,7 +206,37 @@ function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
 }
 
 // ------------------------------
-// Send Email
+// Hashing
+// ------------------------------
+
+/**
+ * Hash a post
+ * Convert to stably sorted string, then hash
+ */
+function hashPost(post: Post) {
+  let str = JSON.stringify(sortBy(post));
+  return hashCode(str);
+}
+
+/**
+ * Hash a string
+ * Source: https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
+ */
+function hashCode(str: string) {
+  var hash = 0,
+    i,
+    chr;
+  if (this.length === 0) return hash;
+  for (i = 0; i < this.length; i++) {
+    chr = this.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+}
+
+// ------------------------------
+// Emailing
 // ------------------------------
 
 /** Send email */
