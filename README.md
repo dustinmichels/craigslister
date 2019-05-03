@@ -10,7 +10,7 @@ npm install -g typescript
 npm install -g @google/clasp
 
 # install GAS types locally
-npm i install
+npm install
 ```
 
 Rename `.clasp.template.json` to `.clasp.json` and update `scriptId`.
