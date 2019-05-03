@@ -14,6 +14,8 @@ const CONF: Conf = {
   keywords: [
     "python",
     "javascript",
+    "html",
+    "css",
     "programming",
     "programmer",
     "scripting",
@@ -25,12 +27,14 @@ const CONF: Conf = {
     "analysis",
     "analytics",
     "science",
+    "visualization",
+    "statistics",
     "files",
     "txt",
     "csv",
     "spreadsheet",
-    "excel",
-    "google sheets",
+    "data",
+    "website",
     "tutor"
   ],
   // email setings
@@ -57,7 +61,7 @@ function main() {
     postData = postData.concat(annotatedPosts);
     i += 25;
   }
-  logToSheet(postData);
+  logToSheet(postData, false);
   let chosenPosts = filterAnnotatedPosts(postData);
   sendEmail(chosenPosts);
 }
@@ -144,8 +148,9 @@ function filterAnnotatedPosts(posts: AnnotatedPost[]) {
  * Log data to Google Sheet for further analysis / review
  * @param data
  */
-function logToSheet(data: AnnotatedPost[]) {
-  let sheet = SpreadsheetApp.getActiveSheet();
+function logToSheet(data: AnnotatedPost[], test: boolean) {
+  let i = test ? 1 : 0;
+  let sheet = SpreadsheetApp.getActive().getSheets()[i];
 
   // transform data
   let dataArr = data.map(post => {
@@ -200,7 +205,7 @@ function test() {
     let annotatedPosts = annotatePosts(posts);
     postData = postData.concat(annotatedPosts);
   });
-  logToSheet(postData);
+  logToSheet(postData, true);
 
   // filter for matching posts
   let chosenPosts = filterAnnotatedPosts(postData);
