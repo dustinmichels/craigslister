@@ -1,6 +1,8 @@
 # Craigslister
 
-A Google Apps Script (GAS) script to automatically find craigslist gigs related to scripting & automation.
+A meta-script! A Google Apps Script (GAS) script to discover quick craigslist gigs related to scripting & automation.
+
+![demo](images/demo.png)
 
 ## Setup
 
