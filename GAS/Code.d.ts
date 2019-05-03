@@ -14,7 +14,8 @@ interface Post {
   title: string;
   link: string;
   description: string;
-  date: Date;
+  listedDate: Date;
+  scrapedDate: Date;
 }
 
 /** A craiglist post object */

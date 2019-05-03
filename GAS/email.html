@@ -1,32 +1,32 @@
 <html>
   <head>
-  <style type="text/css">
-    table.gridtable {
-        font-family: verdana,arial,sans-serif;
-        font-size:11px;
-        color:#333333;
+    <style type="text/css">
+      table.gridtable {
+        font-family: verdana, arial, sans-serif;
+        font-size: 11px;
+        color: #333333;
         border-width: 1px;
         border-color: #666666;
         border-collapse: collapse;
-    }
-    table.gridtable th {
+      }
+      table.gridtable th {
         border-width: 1px;
         padding: 8px;
         border-style: solid;
         border-color: #666666;
         background-color: #dedede;
-    }
-    table.gridtable td {
+      }
+      table.gridtable td {
         border-width: 1px;
         padding: 8px;
         border-style: solid;
         border-color: #666666;
         background-color: #ffffff;
-    }
+      }
     </style>
   </head>
   <body>
-    <p>Craigslist leads??</p>
+    <p>Fun craigslist gigs??</p>
     <table class="gridtable">
       <tr>
         <th>Title/Link</th>
@@ -34,13 +34,13 @@
         <th>Date</th>
       </tr>
       <? for (var i = 0; i < data.length; i++) { ?>
-        <tr>
-            <td>
-              <a href="<?= data[i]['link'] ?>"><?= data[i]['title'] ?></a>
-             </td>
-            <td><?= data[i]['description'] ?></td>
-            <td><?= data[i]['date'] ?></td>
-        </tr>
+      <tr>
+        <td>
+          <a href="<?= data[i]['link'] ?>"><?= data[i]['title'] ?></a>
+        </td>
+        <td><?= data[i]['description'] ?></td>
+        <td><?= data[i]['listedDate'].toLocaleString() ?></td>
+      </tr>
       <? } ?>
     </table>
   </body>

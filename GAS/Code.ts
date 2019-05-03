@@ -5,11 +5,11 @@
 // ------------------------------
 
 const CONF: Conf = {
-  // valid craigslist search url (in this case computer gigs near Boulder)
+  // valid craigslist search url (in this case computer gigs in Boulder and nearby areas)
   baseUrl:
-    "https://boulder.craigslist.org/search/cpg?is_paid=all&nearbyArea=13&nearbyArea=210&nearbyArea=287&nearbyArea=288&nearbyArea=315&nearbyArea=713&searchNearby=2",
+    "https://boulder.craigslist.org/search/cpg?nearbyArea=13&nearbyArea=210&nearbyArea=287&nearbyArea=288&nearbyArea=315&nearbyArea=713&searchNearby=2",
   // num posts to scrape, should be a multiple of 25
-  numPosts: 100,
+  numPosts: 50,
   // words to search for (case insensitive)
   keywords: [
     "analysis",
@@ -57,15 +57,24 @@ const CONF: Conf = {
 function main() {
   let postData = [];
   let i = 0;
+  // get data
   while (i < CONF.numPosts) {
     let posts = parseUrl(getUrl(i));
     let annotatedPosts = annotatePosts(posts);
     postData = postData.concat(annotatedPosts);
     i += 25;
   }
-  logToSheet(postData, false);
   let chosenPosts = filterAnnotatedPosts(postData);
-  sendEmail(chosenPosts);
+
+  Logger.log(">> Chose %s / %s posts", chosenPosts.length, postData.length);
+  Logger.log(">> Logging data to sheet");
+  logToSheet(postData);
+  if (chosenPosts) {
+    Logger.log(">> Emailing chosen posts");
+    sendEmail(chosenPosts);
+  } else {
+    Logger.log(">> Not emailing - no posts chosen");
+  }
 }
 
 // ------------------------------
@@ -79,10 +88,13 @@ function main() {
  *   N=25 => posts 26-50
  */
 function getUrl(n: number) {
-  let formatArg = "&format=rss";
-  let startArg = "&s=NNN";
-  // let todayArg = "&postedToday=1";
-  return CONF.baseUrl + formatArg + startArg.replace("NNN", n.toString());
+  return (
+    CONF.baseUrl +
+    "&format=rss" + // rss format
+    "&is_paid=all" + // paid [yes, no, all]
+    "&s=NNN".replace("NNN", n.toString()) + // starting index
+    "&postedToday=1" // posted today only
+  );
 }
 
 /** Get posts from url **/
@@ -105,11 +117,12 @@ function parseContent(xml: string): Post[] {
       info[child.getName()] = child.getText();
     });
     // construct "post" object, add to list
-    allPosts.push({
+    allPosts.push(<Post>{
       title: info["title"],
       link: info["link"],
       description: info["description"],
-      date: new Date(info["date"])
+      listedDate: new Date(info["date"]),
+      scrapedDate: new Date()
     });
   }
   return allPosts;
@@ -149,20 +162,40 @@ function filterAnnotatedPosts(posts: AnnotatedPost[]) {
 
 /**
  * Log data to Google Sheet for further analysis / review
- * @param data - list of annotated posts
- * @param test - if true write to test sheet, else main sheet
  */
-function logToSheet(data: AnnotatedPost[], test: boolean) {
-  let i = test ? 1 : 0;
-  let sheet = SpreadsheetApp.getActive().getSheets()[i];
+function logToSheet(data: AnnotatedPost[]) {
+  return _logToSheet(data, 0);
+}
 
+/**
+ * Log test data to test sheet
+ */
+function logToTestSheet(data: AnnotatedPost[]) {
+  return _logToSheet(data, 1);
+}
+
+/**
+ * Logs data to specified sheeet (0=main, 1=test)
+ */
+function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
+  if (data.length === 0) {
+    Logger.log("no data, not logging");
+    return;
+  }
+  let sheet = SpreadsheetApp.getActive().getSheets()[sheetIdx];
   // transform data
   let dataArr = data.map(post => {
-    return [post.date, post.match, post.title, post.description, post.link];
+    return [
+      post.scrapedDate,
+      post.match,
+      post.listedDate,
+      post.title,
+      post.description,
+      post.link
+    ];
   });
-  // let headers = ["date", "match", "title", "description", "link"];
+  // let headers = ["scrape_date", "match", "listed_date", "title", "description", "link"];
   // dataArr.unshift(headers);
-
   // write to sheet
   let existingRange = sheet.getDataRange();
   let startRow = existingRange.getNumRows() + 1;
@@ -209,7 +242,7 @@ function test() {
     let annotatedPosts = annotatePosts(posts);
     postData = postData.concat(annotatedPosts);
   });
-  logToSheet(postData, true);
+  logToTestSheet(postData);
 
   // filter for matching posts
   let chosenPosts = filterAnnotatedPosts(postData);
