@@ -187,6 +187,7 @@ function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
   // transform data
   let dataArr = data.map(post => {
     return [
+      hashPost(post),
       post.scrapedDate,
       post.match,
       post.listedDate,
