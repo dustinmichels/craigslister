@@ -79,6 +79,7 @@ function main() {
 function getUrl(n: number) {
   let formatArg = "&format=rss";
   let startArg = "&s=NNN";
+  // let todayArg = "&postedToday=1";
   return CONF.baseUrl + formatArg + startArg.replace("NNN", n.toString());
 }
 
@@ -106,7 +107,7 @@ function parseContent(xml: string): Post[] {
       title: info["title"],
       link: info["link"],
       description: info["description"],
-      date: info["date"]
+      date: new Date(info["date"]).toLocaleString()
     });
   }
   return allPosts;
