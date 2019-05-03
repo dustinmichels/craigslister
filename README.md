@@ -1,6 +1,6 @@
-# Craigslister
+# Craigslister ☮️
 
-A meta-script! A Google Apps Script (GAS) script to discover quick craigslist gigs related to scripting & automation.
+A meta-script! A Google Apps Script (GAS) script to discover little craigslist gigs related to scripting & automation.
 
 ![demo](images/demo.png)
 
