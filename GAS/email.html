@@ -1,0 +1,47 @@
+<html>
+  <head>
+  <style type="text/css">
+    table.gridtable {
+        font-family: verdana,arial,sans-serif;
+        font-size:11px;
+        color:#333333;
+        border-width: 1px;
+        border-color: #666666;
+        border-collapse: collapse;
+    }
+    table.gridtable th {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #dedede;
+    }
+    table.gridtable td {
+        border-width: 1px;
+        padding: 8px;
+        border-style: solid;
+        border-color: #666666;
+        background-color: #ffffff;
+    }
+    </style>
+  </head>
+  <body>
+    <p>Craigslist leads??</p>
+    <table class="gridtable">
+      <tr>
+        <th>Title/Link</th>
+        <th>Description</th>
+        <th>Date</th>
+      </tr>
+      <? for (var i = 0; i < data.length; i++) { ?>
+        <tr>
+            <td>
+              <a href="<?= data[i]['link'] ?>"><?= data[i]['title'] ?></a>
+             </td>
+            <td><?= data[i]['description'] ?></td>
+            <td><?= data[i]['date'] ?></td>
+        </tr>
+      <? } ?>
+    </table>
+  </body>
+</html>
