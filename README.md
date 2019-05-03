@@ -2,12 +2,6 @@
 
 A Google Apps Script (GAS) script to automatically find craigslist gigs related to scripting & automation.
 
-![website-image](images/input.png)
-
-⇓⇓⇓⇓⇓
-
-![website-image](images/output.png)
-
 ## Setup
 
 ```bash
