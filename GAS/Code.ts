@@ -124,7 +124,7 @@ function parseContent(xml: string): Post[] {
       listedDate: new Date(info["date"]),
       scrapedDate: new Date()
     };
-    post["hash"] = hashPost(post);
+    allPosts.push(post);
   }
   return allPosts;
 }
@@ -187,7 +187,7 @@ function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
   // transform data
   let dataArr = data.map(post => {
     return [
-      hashPost(post),
+      // hashPost(post),
       post.scrapedDate,
       post.match,
       post.listedDate,
