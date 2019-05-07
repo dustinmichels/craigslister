@@ -1,18 +1,24 @@
 {
   "name": "craigslister",
   "version": "1.0.0",
-  "description": "Google Apps Script to help find craigslist gigs related to scriping & automation",
-  "main": "index.js",
-  "dependencies": {
-    "lodash": "^4.17.11"
-  },
+  "description": "A Google Apps Script (GAS) script to discover little craigslist gigs related to scripting & automation. A meta-script!",
+  "private": true,
+  "dependencies": {},
   "devDependencies": {
     "@types/google-apps-script": "0.0.45"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dustinmichels/craigslister.git"
+  },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dustinmichels/craigslister/issues"
+  },
+  "homepage": "https://github.com/dustinmichels/craigslister#readme"
 }
