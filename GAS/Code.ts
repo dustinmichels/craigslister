@@ -1,5 +1,5 @@
 /// <reference path="./Code.d.ts" />
-import { sortBy } from "lodash";
+
 // ------------------------------
 // Configuration
 // ------------------------------
@@ -55,21 +55,24 @@ const CONF: Conf = {
  * then send relevant posts in email
  */
 function main() {
+  // get data
   let postData = [];
   let i = 0;
-  // get data
   while (i < CONF.numPosts) {
     let posts = parseUrl(getUrl(i));
     let annotatedPosts = annotatePosts(posts);
     postData = postData.concat(annotatedPosts);
     i += 25;
   }
-  let chosenPosts = filterAnnotatedPosts(postData);
 
+  // choose relevant posts
+  let chosenPosts = filterAnnotatedPosts(postData);
   Logger.log(">> Chose %s / %s posts", chosenPosts.length, postData.length);
-  Logger.log(">> Logging data to sheet");
+
+  // log to sheet
   logToSheet(postData);
-  if (chosenPosts) {
+  Logger.log(">> Logging data to sheet");
+  if (isEmpty(chosenPosts)) {
     Logger.log(">> Emailing chosen posts");
     sendEmail(chosenPosts);
   } else {
@@ -83,9 +86,9 @@ function main() {
 
 /**
  * Build RSS web address, for computer gigs in Boudler & nearby
- * Returns 25 recent posts, starting at index N
- *   N=0  => posts 1-25
- *   N=25 => posts 26-50
+ * Returns 25 recent posts, starting at index n
+ *   n=0  => posts 1-25
+ *   n=25 => posts 26-50
  */
 function getUrl(n: number) {
   return (
@@ -187,7 +190,6 @@ function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
   // transform data
   let dataArr = data.map(post => {
     return [
-      // hashPost(post),
       post.scrapedDate,
       post.match,
       post.listedDate,
@@ -196,8 +198,6 @@ function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
       post.link
     ];
   });
-  // let headers = ["scrape_date", "match", "listed_date", "title", "description", "link"];
-  // dataArr.unshift(headers);
   // write to sheet
   let existingRange = sheet.getDataRange();
   let startRow = existingRange.getNumRows() + 1;
@@ -207,37 +207,7 @@ function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
 }
 
 // ------------------------------
-// Hashing
-// ------------------------------
-
-/**
- * Hash a post
- * Convert to stably sorted string, then hash
- */
-function hashPost(post: Post) {
-  let str = JSON.stringify(sortBy(post));
-  return hashCode(str);
-}
-
-/**
- * Hash a string
- * Source: https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
- */
-function hashCode(str: string) {
-  var hash = 0,
-    i,
-    chr;
-  if (this.length === 0) return hash;
-  for (i = 0; i < this.length; i++) {
-    chr = this.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0; // Convert to 32bit integer
-  }
-  return hash;
-}
-
-// ------------------------------
-// Emailing
+// Email
 // ------------------------------
 
 /** Send email */
@@ -254,6 +224,18 @@ function getHtmlBody_(postData: Post[]) {
   let t = HtmlService.createTemplateFromFile("email");
   t["data"] = postData;
   return t.evaluate().getContent();
+}
+
+// ------------------------------
+// Helper
+// ------------------------------
+
+/** Check if array is empty */
+function isEmpty(obj: object) {
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) return false;
+  }
+  return true;
 }
 
 // ------------------------------
