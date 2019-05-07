@@ -18,5 +18,5 @@ npm install
 Rename `.clasp.template.json` to `.clasp.json` and update `scriptId`.
 
 ```bash
-cp .clasp.template.json .clasp.json
+mv .clasp.template.json .clasp.json
 ```
