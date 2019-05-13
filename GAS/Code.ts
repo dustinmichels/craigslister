@@ -201,7 +201,13 @@ function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
   // write to sheet
   let existingRange = sheet.getDataRange();
   let startRow = existingRange.getNumRows() + 1;
-  let range = sheet.getRange(startRow, 1, dataArr.length, dataArr[0].length);
+  let startCol = 1;
+  let range = sheet.getRange(
+    startRow,
+    startCol,
+    dataArr.length,
+    dataArr[0].length
+  );
   range.setValues(dataArr);
   return;
 }
