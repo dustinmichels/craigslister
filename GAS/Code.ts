@@ -72,7 +72,7 @@ function main() {
   // log to sheet
   logToSheet(postData);
   Logger.log(">> Logging data to sheet");
-  if (isEmpty(chosenPosts)) {
+  if (!isEmpty(chosenPosts)) {
     Logger.log(">> Emailing chosen posts");
     sendEmail(chosenPosts);
   } else {
