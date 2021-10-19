@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    Testing!
+    <button onclick="run()">Press me</button>
+    <p id="output"></p>
+    <script>
+      function run() {
+        const output = document.getElementById("output");
+        output.innerText = "starting!";
+
+        // const url =
+        //   "https://denver.craigslist.org/search/sss?sort=rel&query=freezer";
+        let url = "https://example.com/";
+
+        fetch(url, { mode: "cors" })
+          .then(function (response) {
+            return response.text();
+          })
+          .then(function (html) {
+            output.innerText = html;
+
+            // Initialize the DOM parser
+            const parser = new DOMParser();
+
+            // Parse the text
+            const doc = parser.parseFromString(html, "text/html");
+
+            const text = new XMLSerializer().serializeToString(doc);
+            console.log("from xml!");
+            console.log(text);
+
+            output.innerText = "done!";
+          })
+          .catch(function (err) {
+            console.log("Failed to fetch page: ", err);
+            output.innerText = `Failed to fetch page: ${err}`;
+          });
+      }
+    </script>
+  </body>
+</html>

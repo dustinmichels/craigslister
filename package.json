@@ -4,7 +4,8 @@
   "description": "A Google Apps Script (GAS) script to discover little craigslist gigs related to scripting & automation. A meta-script!",
   "private": true,
   "dependencies": {
-    "@types/google-apps-script": "^1.0.37"
+    "@types/google-apps-script": "^1.0.37",
+    "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.1.0",

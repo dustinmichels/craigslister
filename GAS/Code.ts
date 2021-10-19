@@ -2,6 +2,22 @@
 // Configuration
 // ------------------------------
 
+// Use this code for Google Docs, Slides, Forms, or Sheets.
+function onOpen() {
+  SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
+    .createMenu("Dialog")
+    .addItem("Open", "openDialog")
+    .addToUi();
+}
+
+function openDialog() {
+  var html = HtmlService.createHtmlOutputFromFile("test");
+  // var template = HtmlService.createTemplateFromFile("test");
+  // var html = template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME);
+  SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
+    .showModalDialog(html, "Dialog title");
+}
+
 const CONF: Conf = {
   // valid craigslist search url (in this case computer gigs in Boulder and nearby areas)
   baseUrl:
