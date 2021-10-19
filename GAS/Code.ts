@@ -33,6 +33,7 @@ function go() {
   const inHtml = getHtml();
   let template = HtmlService.createTemplateFromFile("make");
   template.inHtml = inHtml;
+  template.callback = parseXml;
   let html = template.evaluate(); // should run JavaScript??
   Logger.log(html.getContent());
   // let code = template.getCode();

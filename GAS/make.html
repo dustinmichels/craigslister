@@ -12,7 +12,8 @@
   </head>
   <body>
     <textarea id="inHtmlArea" disabled rows="4" cols="50">
-        <?= inHtml ?>
+        <? var doc = new DOMParser().parseFromString(inHtml, "text/html"); ?>
+        <?= new XMLSerializer().serializeToString(doc); ?>
     </textarea>
   </body>
 </html>
