@@ -1,0 +1,6 @@
+{
+  "include": ["GAS/**/*.ts"],
+  "compilerOptions": {
+    "target": "ES2019"
+  }
+}
