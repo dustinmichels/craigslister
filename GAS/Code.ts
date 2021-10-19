@@ -35,13 +35,13 @@ const CONF: Conf = {
     "txt",
     "visualization",
     "website",
-    "xml"
+    "xml",
   ],
   // email setings
   email: {
     recipients: "dustin7538@gmail.com,", // comma seperated list of recipients
-    subject: "Craigslist Postings" // email subject line
-  }
+    subject: "Craigslist Postings", // email subject line
+  },
 };
 
 // ------------------------------
@@ -57,20 +57,20 @@ function main() {
   let postData = [];
   let i = 0;
   while (i < CONF.numPosts) {
-    let posts = parseUrl(getUrl(i));
-    let annotatedPosts = annotatePosts(posts);
+    const posts = parseUrl(getUrl(i));
+    const annotatedPosts = annotatePosts(posts);
     postData = postData.concat(annotatedPosts);
     i += 25;
   }
 
   // choose relevant posts
-  let chosenPosts = filterAnnotatedPosts(postData);
+  const chosenPosts = filterAnnotatedPosts(postData);
   Logger.log(">> Chose %s / %s posts", chosenPosts.length, postData.length);
 
   // log to sheet
   logToSheet(postData);
   Logger.log(">> Logging data to sheet");
-  if (!isEmpty(chosenPosts)) {
+  if (!chosenPosts.length) {
     Logger.log(">> Emailing chosen posts");
     sendEmail(chosenPosts);
   } else {
@@ -100,30 +100,30 @@ function getUrl(n: number) {
 
 /** Get posts from url **/
 function parseUrl(url: string): Post[] {
-  let xml = UrlFetchApp.fetch(url).getContentText();
+  const xml = UrlFetchApp.fetch(url).getContentText();
   return parseContent(xml);
 }
 
 /** Build list with post info from each post on page **/
 function parseContent(xml: string): Post[] {
-  let allPosts = [];
-  let purlNamespace = XmlService.getNamespace("http://purl.org/rss/1.0/");
-  let root = XmlService.parse(xml).getRootElement();
-  let items = root.getChildren("item", purlNamespace);
-  for (let item of items) {
+  const allPosts = [];
+  const purlNamespace = XmlService.getNamespace("http://purl.org/rss/1.0/");
+  const root = XmlService.parse(xml).getRootElement();
+  const items = root.getChildren("item", purlNamespace);
+  for (const item of items) {
     // extract relevant info from children
-    let info = {};
-    let children = item.getChildren();
-    children.forEach(child => {
+    const info = {};
+    const children = item.getChildren();
+    children.forEach((child) => {
       info[child.getName()] = child.getText();
     });
     // construct "post" object, add to list
-    let post = <Post>{
+    const post = <Post>{
       title: info["title"],
       link: info["link"],
       description: info["description"],
       listedDate: new Date(info["date"]),
-      scrapedDate: new Date()
+      scrapedDate: new Date(),
     };
     allPosts.push(post);
   }
@@ -136,16 +136,16 @@ function parseContent(xml: string): Post[] {
 
 /** Check if post looks relevant */
 function isRelevant(post: Post) {
-  let re = new RegExp(CONF.keywords.join("|"), "ig");
-  let titleMatch = post.title.match(re);
-  let descMatch = post.description.match(re);
+  const re = new RegExp(CONF.keywords.join("|"), "ig");
+  const titleMatch = post.title.match(re);
+  const descMatch = post.description.match(re);
   return titleMatch || descMatch;
 }
 
 /** Annotate post objects with "match" field */
 function annotatePosts(posts: Post[]): AnnotatedPost[] {
-  let annPosts = posts.map(post => {
-    let match = isRelevant(post);
+  const annPosts = posts.map((post) => {
+    const match = isRelevant(post);
     return { match: match, ...post };
   });
   return annPosts;
@@ -153,7 +153,7 @@ function annotatePosts(posts: Post[]): AnnotatedPost[] {
 
 /** Filter posts to only those that were a match */
 function filterAnnotatedPosts(posts: AnnotatedPost[]) {
-  return posts.filter(function(p) {
+  return posts.filter(function (p) {
     return p.match;
   });
 }
@@ -184,23 +184,23 @@ function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
     Logger.log("no data, not logging");
     return;
   }
-  let sheet = SpreadsheetApp.getActive().getSheets()[sheetIdx];
+  const sheet = SpreadsheetApp.getActive().getSheets()[sheetIdx];
   // transform data
-  let dataArr = data.map(post => {
+  const dataArr = data.map((post) => {
     return [
       post.scrapedDate,
       post.match,
       post.listedDate,
       post.title,
       post.description,
-      post.link
+      post.link,
     ];
   });
   // write to sheet
-  let existingRange = sheet.getDataRange();
-  let startRow = existingRange.getNumRows() + 1;
-  let startCol = 1;
-  let range = sheet.getRange(
+  const existingRange = sheet.getDataRange();
+  const startRow = existingRange.getNumRows() + 1;
+  const startCol = 1;
+  const range = sheet.getRange(
     startRow,
     startCol,
     dataArr.length,
@@ -216,30 +216,18 @@ function _logToSheet(data: AnnotatedPost[], sheetIdx: number) {
 
 /** Send email */
 function sendEmail(postData: Post[]) {
-  let body = getHtmlBody_(postData);
-  let email = CONF.email;
+  const body = getHtmlBody_(postData);
+  const email = CONF.email;
   GmailApp.sendEmail(email.recipients, email.subject, body, {
-    htmlBody: getHtmlBody_(postData)
+    htmlBody: getHtmlBody_(postData),
   });
 }
 
 /** Create html string from email.html template */
 function getHtmlBody_(postData: Post[]) {
-  let t = HtmlService.createTemplateFromFile("email");
+  const t = HtmlService.createTemplateFromFile("email");
   t["data"] = postData;
   return t.evaluate().getContent();
-}
-
-// ------------------------------
-// Helper
-// ------------------------------
-
-/** Check if array is empty */
-function isEmpty(obj: object) {
-  for (var key in obj) {
-    if (obj.hasOwnProperty(key)) return false;
-  }
-  return true;
 }
 
 // ------------------------------
@@ -251,19 +239,19 @@ function isEmpty(obj: object) {
  * Use saved XML files, rather than scraping page.
  */
 function test() {
-  let samplePages = ["samplePage", "samplePage2"];
+  const samplePages = ["samplePage", "samplePage2"];
   let postData = [];
   // Iterate over sample pages
-  samplePages.forEach(page => {
-    let xml = HtmlService.createHtmlOutputFromFile(page).getContent();
-    let posts = parseContent(xml);
-    let annotatedPosts = annotatePosts(posts);
+  samplePages.forEach((page) => {
+    const xml = HtmlService.createHtmlOutputFromFile(page).getContent();
+    const posts = parseContent(xml);
+    const annotatedPosts = annotatePosts(posts);
     postData = postData.concat(annotatedPosts);
   });
   logToTestSheet(postData);
 
   // filter for matching posts
-  let chosenPosts = filterAnnotatedPosts(postData);
+  const chosenPosts = filterAnnotatedPosts(postData);
   // Print out results
   Logger.log(
     "Selected %s / %s posts",
@@ -278,6 +266,6 @@ function test() {
 
 /** Test scraper & send email */
 function testWithEmail() {
-  let data = test();
+  const data = test();
   sendEmail(data);
 }
