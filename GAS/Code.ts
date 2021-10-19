@@ -11,11 +11,51 @@ function onOpen() {
 }
 
 function openDialog() {
-  var html = HtmlService.createHtmlOutputFromFile("test");
-  // var template = HtmlService.createTemplateFromFile("test");
-  // var html = template.evaluate().setSandboxMode(HtmlService.SandboxMode.IFRAME);
+  // var html = HtmlService.createHtmlOutputFromFile("test");
+  const inHtml = getHtml();
+  let template = HtmlService.createTemplateFromFile("make");
+  template.inHtml = inHtml;
+  const html = template.evaluate();
   SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
     .showModalDialog(html, "Dialog title");
+}
+
+function getHtml() {
+  let url = "https://example.com/";
+  // let url = "https://denver.craigslist.org/search/sss?sort=rel&query=freezer";
+  var response = UrlFetchApp.fetch(url);
+  let html = response.getContentText("UTF-8");
+  return html;
+}
+
+function go() {
+  // HtmlService.createHtmlOutputFromFile("make");
+  const inHtml = getHtml();
+  let template = HtmlService.createTemplateFromFile("make");
+  template.inHtml = inHtml;
+  let html = template.evaluate(); // should run JavaScript??
+  Logger.log(html.getContent());
+  // let code = template.getCode();
+  // Logger.log(code);
+  // eval(code);
+  SpreadsheetApp.getUi() // Or DocumentApp or SlidesApp or FormApp.
+    .showModalDialog(html, "Dialog title");
+}
+
+function testPrint() {
+  Logger.log("Printing!!!");
+  console.log("test print!");
+}
+
+function parseXml(xml: string) {
+  Logger.log("parseXML called");
+  let document = XmlService.parse(xml);
+  Logger.log(document);
+}
+
+function doSomething() {
+  Logger.log("Do Something!");
+  console.log("do something!");
 }
 
 const CONF: Conf = {

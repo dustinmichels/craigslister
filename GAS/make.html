@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <script>
+      google.script.run.testPrint();
+      var inHtml = document.getElementById("inHtmlArea").value;
+      var doc = new DOMParser().parseFromString(inHtml, "text/html");
+      var xml = new XMLSerializer().serializeToString(doc);
+      google.script.run.parseXml(xml);
+    </script>
+  </head>
+  <body>
+    <textarea id="inHtmlArea" disabled rows="4" cols="50">
+        <?= inHtml ?>
+    </textarea>
+  </body>
+</html>
