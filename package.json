@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "description": "A Google Apps Script (GAS) script to discover little craigslist gigs related to scripting & automation. A meta-script!",
   "private": true,
-  "dependencies": {},
-  "devDependencies": {
-    "@types/google-apps-script": "0.0.45"
+  "dependencies": {
+    "@types/google-apps-script": "^1.0.37"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
